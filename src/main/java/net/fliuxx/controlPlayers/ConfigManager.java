@@ -37,6 +37,15 @@ public class ConfigManager {
         return config.getString("commands.mute", "mute %player% %duration% %reason%");
     }
 
+    // Nuovi metodi per unban e unmute
+    public String getUnbanCommand() {
+        return config.getString("commands.unban", "unban %player%");
+    }
+
+    public String getUnmuteCommand() {
+        return config.getString("commands.unmute", "unmute %player%");
+    }
+
     public boolean isChannelAllowed(String channelId) {
         return config.getStringList("discord.allowed-channels").contains(channelId);
     }

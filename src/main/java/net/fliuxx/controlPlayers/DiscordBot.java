@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
@@ -60,6 +61,15 @@ public class DiscordBot extends ListenerAdapter {
                 break;
             case "mute":
                 handleMuteCommand(event, args);
+                break;
+            case "unban":
+                handleUnbanCommand(event, args);
+                break;
+            case "unmute":
+                handleUnmuteCommand(event, args);
+                break;
+            case "ip":
+                handleIpCommand(event, args);
                 break;
             case "help":
                 handleHelpCommand(event);
@@ -200,6 +210,96 @@ public class DiscordBot extends ListenerAdapter {
         });
     }
 
+    // NUOVO: Comando unban
+    private void handleUnbanCommand(MessageReceivedEvent event, String[] args) {
+        if (args.length < 2) {
+            event.getChannel().sendMessage("❌ Uso corretto: `" + config.getCommandPrefix() + "unban <player>`").queue();
+            return;
+        }
+
+        String playerName = args[1];
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            String command = config.getUnbanCommand()
+                    .replace("%player%", playerName);
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setColor(Color.GREEN);
+            embed.setTitle("✅ Player Sbannato");
+            embed.addField("Player", playerName, true);
+            embed.addField("Staff", event.getAuthor().getAsTag(), true);
+            embed.setTimestamp(java.time.Instant.now());
+
+            event.getChannel().sendMessageEmbeds(embed.build()).queue();
+        });
+    }
+
+    // NUOVO: Comando unmute
+    private void handleUnmuteCommand(MessageReceivedEvent event, String[] args) {
+        if (args.length < 2) {
+            event.getChannel().sendMessage("❌ Uso corretto: `" + config.getCommandPrefix() + "unmute <player>`").queue();
+            return;
+        }
+
+        String playerName = args[1];
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            String command = config.getUnmuteCommand()
+                    .replace("%player%", playerName);
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setColor(Color.GREEN);
+            embed.setTitle("🔊 Player Smutato");
+            embed.addField("Player", playerName, true);
+            embed.addField("Staff", event.getAuthor().getAsTag(), true);
+            embed.setTimestamp(java.time.Instant.now());
+
+            event.getChannel().sendMessageEmbeds(embed.build()).queue();
+        });
+    }
+
+    // NUOVO: Comando per vedere l'IP del player
+    private void handleIpCommand(MessageReceivedEvent event, String[] args) {
+        if (args.length < 2) {
+            event.getChannel().sendMessage("❌ Uso corretto: `" + config.getCommandPrefix() + "ip <player>`").queue();
+            return;
+        }
+
+        String playerName = args[1];
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            Player target = Bukkit.getPlayer(playerName);
+
+            if (target == null) {
+                // Prova con offline player
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
+                if (!offlinePlayer.hasPlayedBefore()) {
+                    event.getChannel().sendMessage("❌ Player `" + playerName + "` non trovato!").queue();
+                    return;
+                }
+                event.getChannel().sendMessage("❌ Player `" + playerName + "` non è online al momento!").queue();
+                return;
+            }
+
+            String playerIP = target.getAddress().getAddress().getHostAddress();
+
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setColor(Color.CYAN);
+            embed.setTitle("🌐 Informazioni IP Player");
+            embed.addField("Player", playerName, true);
+            embed.addField("Indirizzo IP", playerIP, true);
+            embed.addField("Richiesto da", event.getAuthor().getAsTag(), true);
+            embed.setTimestamp(java.time.Instant.now());
+            embed.setFooter("⚠️ Informazione sensibile - Tratta con riservatezza");
+
+            event.getChannel().sendMessageEmbeds(embed.build()).queue();
+        });
+    }
+
     private void handleHelpCommand(MessageReceivedEvent event) {
         String prefix = config.getCommandPrefix();
 
@@ -210,8 +310,11 @@ public class DiscordBot extends ListenerAdapter {
 
         embed.addField(prefix + "players", "Mostra la lista dei player online", false);
         embed.addField(prefix + "ban <player> [durata] [motivo]", "Banna un player dal server", false);
+        embed.addField(prefix + "unban <player>", "Sbanna un player dal server", false);
         embed.addField(prefix + "kick <player> [motivo]", "Kicka un player dal server", false);
         embed.addField(prefix + "mute <player> [durata] [motivo]", "Muta un player nel server", false);
+        embed.addField(prefix + "unmute <player>", "Smuta un player nel server", false);
+        embed.addField(prefix + "ip <player>", "Mostra l'IP del player (solo se online)", false);
         embed.addField(prefix + "help", "Mostra questo messaggio di aiuto", false);
 
         embed.setFooter("Esempi durata: 1h, 30m, 1d, permanent");

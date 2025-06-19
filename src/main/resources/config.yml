@@ -29,19 +29,31 @@ commands:
   # Comando per mutare
   mute: "mute %player% %duration% %reason%"
 
+  # Comando per sbannare
+  unban: "unban %player%"
+
+  # Comando per smutare
+  unmute: "unmute %player%"
+
 # Esempi di configurazione per plugin popolari:
 #
 # Per LiteBans:
 # ban: "litebans:ban %player% %duration% %reason%"
 # mute: "litebans:mute %player% %duration% %reason%"
 # kick: "litebans:kick %player% %reason%"
+# unban: "litebans:unban %player%"
+# unmute: "litebans:unmute %player%"
 #
 # Per EssentialsX:
 # ban: "essentials:ban %player% %reason%"
 # mute: "essentials:mute %player% %duration% %reason%"
 # kick: "essentials:kick %player% %reason%"
+# unban: "essentials:unban %player%"
+# unmute: "essentials:mute %player% remove"
 #
 # Per AdvancedBan:
 # ban: "advancedban:ban %player% %duration% %reason%"
 # mute: "advancedban:mute %player% %duration% %reason%"
 # kick: "advancedban:kick %player% %reason%"
+# unban: "advancedban:unban %player%"
+# unmute: "advancedban:unmute %player%"
