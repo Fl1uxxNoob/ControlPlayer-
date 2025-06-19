@@ -14,6 +14,7 @@ public final class ControlPlayers extends JavaPlugin {
     private JDA jda;
     private ConfigManager configManager;
     private DiscordBot discordBot;
+    private DatabaseManager databaseManager;
 
     @Override
     public void onEnable() {
@@ -23,10 +24,16 @@ public final class ControlPlayers extends JavaPlugin {
         configManager = new ConfigManager(this);
         configManager.loadConfig();
 
+        // Inizializza database se abilitato
+        if (configManager.isDatabaseEnabled()) {
+            databaseManager = new DatabaseManager(this);
+            databaseManager.initialize();
+        }
+
         // Inizializza bot Discord
         initializeDiscordBot();
 
-        getLogger().info("DiscordManager Plugin abilitato!");
+        getLogger().info("ControlPlayers Plugin abilitato!");
     }
 
     @Override
@@ -34,7 +41,12 @@ public final class ControlPlayers extends JavaPlugin {
         if (jda != null) {
             jda.shutdown();
         }
-        getLogger().info("DiscordManager Plugin disabilitato!");
+
+        if (databaseManager != null) {
+            databaseManager.close();
+        }
+
+        getLogger().info("ControlPlayers Plugin disabilitato!");
     }
 
     private void initializeDiscordBot() {
@@ -47,7 +59,7 @@ public final class ControlPlayers extends JavaPlugin {
 
         try {
             jda = JDABuilder.createDefault(token)
-                    // Abilita l’intento MESSAGE_CONTENT
+                    // Abilita l'intento MESSAGE_CONTENT
                     .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                     // (opzionale: se vuoi solo i messaggi di server, aggiungi anche GUILD_MESSAGES)
                     //.enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
@@ -76,5 +88,9 @@ public final class ControlPlayers extends JavaPlugin {
 
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
     }
 }

@@ -53,4 +53,19 @@ public class ConfigManager {
     public boolean hasPermission(String userId) {
         return config.getStringList("discord.allowed-users").contains(userId);
     }
+
+    // Nuovo metodo per controllare i permessi di histstaff
+    public boolean hasHistoryPermission(String userId) {
+        return config.getStringList("discord.history-allowed-users").contains(userId);
+    }
+
+    // Metodo per ottenere il limite massimo di record da mostrare
+    public int getHistoryLimit() {
+        return config.getInt("database.max-history-records", 50);
+    }
+
+    // Metodo per controllare se il database è abilitato
+    public boolean isDatabaseEnabled() {
+        return config.getBoolean("database.enabled", true);
+    }
 }

@@ -12,10 +12,24 @@ discord:
     - "123456789012345678"  # Sostituisci con l'ID del tuo canale
     - "987654321098765432"  # Puoi aggiungere più canali
 
-  # Utenti Discord che possono usare i comandi (ID degli utenti)
+  # Utenti Discord che possono usare i comandi base (ID degli utenti)
   allowed-users:
     - "123456789012345678"  # Sostituisci con il tuo ID Discord
     - "987654321098765432"  # Puoi aggiungere più utenti admin
+
+  # Utenti Discord che possono usare il comando histstaff (ID degli utenti)
+  # ATTENZIONE: Questo comando mostra informazioni sensibili!
+  history-allowed-users:
+    - "123456789012345678"  # Solo admin di alto livello
+    # - "altro_id_admin"    # Decommentare e sostituire per aggiungere altri
+
+# Configurazione Database
+database:
+  # Abilita/disabilita il sistema di logging nel database
+  enabled: true
+
+  # Numero massimo di record da mostrare nel comando histstaff
+  max-history-records: 50
 
 # Comandi da eseguire sul server Minecraft
 # Placeholder disponibili: %player%, %duration%, %reason%
@@ -57,3 +71,19 @@ commands:
 # kick: "advancedban:kick %player% %reason%"
 # unban: "advancedban:unban %player%"
 # unmute: "advancedban:unmute %player%"
+
+# ===== CONFIGURAZIONE SICUREZZA =====
+#
+# IMPORTANTE: Il comando 'histstaff' mostra informazioni sensibili inclusi:
+# - Chi ha eseguito quali comandi
+# - Quando sono stati eseguiti
+# - Su quali player
+# - I motivi delle azioni
+#
+# Assicurati di dare accesso a questo comando solo ai tuoi admin più fidati!
+# Gli ID utente nella sezione 'history-allowed-users' devono essere utenti
+# di massima fiducia nel tuo staff.
+#
+# Per ottenere l'ID di un utente Discord:
+# 1. Abilita la modalità sviluppatore in Discord
+# 2. Clicca destro sull'utente e seleziona "Copia ID"
