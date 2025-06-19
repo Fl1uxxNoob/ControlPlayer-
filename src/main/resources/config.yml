@@ -1,0 +1,47 @@
+# Configurazione ControlPlayer
+
+discord:
+  # Token del bot Discord (OBBLIGATORIO)
+  token: "IL_TUO_TOKEN_QUI"
+
+  # Prefix per i comandi Discord (modificabile)
+  prefix: "!"
+
+  # Canali Discord dove i comandi sono permessi (ID dei canali)
+  allowed-channels:
+    - "123456789012345678"  # Sostituisci con l'ID del tuo canale
+    - "987654321098765432"  # Puoi aggiungere più canali
+
+  # Utenti Discord che possono usare i comandi (ID degli utenti)
+  allowed-users:
+    - "123456789012345678"  # Sostituisci con il tuo ID Discord
+    - "987654321098765432"  # Puoi aggiungere più utenti admin
+
+# Comandi da eseguire sul server Minecraft
+# Placeholder disponibili: %player%, %duration%, %reason%
+commands:
+  # Comando per bannare (personalizzabile per LiteBans, EssentialsX, etc.)
+  ban: "ban %player% %duration% %reason%"
+
+  # Comando per kickare
+  kick: "kick %player% %reason%"
+
+  # Comando per mutare
+  mute: "mute %player% %duration% %reason%"
+
+# Esempi di configurazione per plugin popolari:
+#
+# Per LiteBans:
+# ban: "litebans:ban %player% %duration% %reason%"
+# mute: "litebans:mute %player% %duration% %reason%"
+# kick: "litebans:kick %player% %reason%"
+#
+# Per EssentialsX:
+# ban: "essentials:ban %player% %reason%"
+# mute: "essentials:mute %player% %duration% %reason%"
+# kick: "essentials:kick %player% %reason%"
+#
+# Per AdvancedBan:
+# ban: "advancedban:ban %player% %duration% %reason%"
+# mute: "advancedban:mute %player% %duration% %reason%"
+# kick: "advancedban:kick %player% %reason%"

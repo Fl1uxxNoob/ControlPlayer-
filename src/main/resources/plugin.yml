@@ -1,0 +1,8 @@
+name: ControlPlayers
+version: '1.0'
+main: net.fliuxx.controlPlayers.ControlPlayers
+api-version: 1.8
+description: Plugin per gestire i player tramite Discord
+authors: [ Fl1uxxNoob ]
+depend: []
+softdepend: [LiteBans, Essentials, AdvancedBan]
