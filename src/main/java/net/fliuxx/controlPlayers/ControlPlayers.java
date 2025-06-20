@@ -1,12 +1,14 @@
 package net.fliuxx.controlPlayers;
 
+import net.fliuxx.controlPlayers.discord.DiscordBot;
+import net.fliuxx.controlPlayers.manager.ConfigManager;
+import net.fliuxx.controlPlayers.manager.DatabaseManager;
+import net.fliuxx.controlPlayers.manager.MessagesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import java.util.EnumSet;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ControlPlayers extends JavaPlugin {
 
