@@ -13,6 +13,7 @@ public final class ControlPlayers extends JavaPlugin {
     private static ControlPlayers instance;
     private JDA jda;
     private ConfigManager configManager;
+    private MessagesManager messagesManager; // NUOVO
     private DiscordBot discordBot;
     private DatabaseManager databaseManager;
 
@@ -24,6 +25,9 @@ public final class ControlPlayers extends JavaPlugin {
         configManager = new ConfigManager(this);
         configManager.loadConfig();
 
+        // Inizializza messages manager NUOVO
+        messagesManager = new MessagesManager(this);
+
         // Inizializza database se abilitato
         if (configManager.isDatabaseEnabled()) {
             databaseManager = new DatabaseManager(this);
@@ -33,7 +37,7 @@ public final class ControlPlayers extends JavaPlugin {
         // Inizializza bot Discord
         initializeDiscordBot();
 
-        getLogger().info("ControlPlayers Plugin abilitato!");
+        getLogger().info("ControlPlayers Plugin abilitato! - Developed By Fl1uxxNoob");
     }
 
     @Override
@@ -46,7 +50,7 @@ public final class ControlPlayers extends JavaPlugin {
             databaseManager.close();
         }
 
-        getLogger().info("ControlPlayers Plugin disabilitato!");
+        getLogger().info("ControlPlayers Plugin disabilitato! - Developed By Fl1uxxNoob");
     }
 
     private void initializeDiscordBot() {
@@ -88,6 +92,10 @@ public final class ControlPlayers extends JavaPlugin {
 
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+
+    public MessagesManager getMessagesManager() { // NUOVO
+        return messagesManager;
     }
 
     public DatabaseManager getDatabaseManager() {

@@ -18,11 +18,13 @@ public class DiscordBot extends ListenerAdapter {
     private final ControlPlayers plugin;
     private final ConfigManager config;
     private final DatabaseManager database;
+    private final MessagesManager messages;
 
     public DiscordBot(ControlPlayers plugin) {
         this.plugin = plugin;
         this.config = plugin.getConfigManager();
         this.database = plugin.getDatabaseManager();
+        this.messages = plugin.getMessagesManager();
     }
 
     @Override
@@ -87,6 +89,14 @@ public class DiscordBot extends ListenerAdapter {
                 break;
             case "help":
                 handleHelpCommand(event);
+                break;
+            case "reloadmessages":
+                if (!config.hasPermission(userId)) {
+                    event.getChannel().sendMessage(messages.getNoPermissionError()).queue();
+                    return;
+                }
+                messages.reloadMessages();
+                event.getChannel().sendMessage("✅ Messaggi ricaricati con successo!").queue();
                 break;
             default:
                 event.getChannel().sendMessage("❌ Comando non riconosciuto! Usa `" + prefix + "help` per vedere i comandi disponibili.").queue();
