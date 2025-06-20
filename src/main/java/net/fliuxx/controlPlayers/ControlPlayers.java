@@ -21,23 +21,23 @@ public final class ControlPlayers extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        // Inizializza configurazione
+        // Initialize configuration
         configManager = new ConfigManager(this);
         configManager.loadConfig();
 
-        // Inizializza messages manager NUOVO
+        // Initialize messages manager
         messagesManager = new MessagesManager(this);
 
-        // Inizializza database se abilitato
+        // Initialize database if enabled
         if (configManager.isDatabaseEnabled()) {
             databaseManager = new DatabaseManager(this);
             databaseManager.initialize();
         }
 
-        // Inizializza bot Discord
+        // Initialize Discord bot
         initializeDiscordBot();
 
-        getLogger().info("ControlPlayers Plugin abilitato! - Developed By Fl1uxxNoob");
+        getLogger().info("ControlPlayers Plugin enabled! - Developed By Fl1uxxNoob");
     }
 
     @Override
@@ -50,23 +50,21 @@ public final class ControlPlayers extends JavaPlugin {
             databaseManager.close();
         }
 
-        getLogger().info("ControlPlayers Plugin disabilitato! - Developed By Fl1uxxNoob");
+        getLogger().info("ControlPlayers Plugin disabled! - Developed By Fl1uxxNoob");
     }
 
     private void initializeDiscordBot() {
         String token = configManager.getDiscordToken();
         if (token == null || token.isEmpty()) {
-            getLogger().severe("Token Discord non configurato! Disabilito il plugin.");
+            getLogger().severe("Discord token not configured! I disable the plugin.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
         try {
             jda = JDABuilder.createDefault(token)
-                    // Abilita l'intento MESSAGE_CONTENT
+                    // Enable the MESSAGE_CONTENT intent
                     .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-                    // (opzionale: se vuoi solo i messaggi di server, aggiungi anche GUILD_MESSAGES)
-                    //.enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
                     .setActivity(Activity.playing("Minecraft Server"))
                     .build();
 
@@ -74,10 +72,10 @@ public final class ControlPlayers extends JavaPlugin {
             jda.addEventListener(discordBot);
 
             jda.awaitReady();
-            getLogger().info("Bot Discord connesso!");
+            getLogger().info("Discord bot connected!");
 
         } catch (Exception e) {
-            getLogger().severe("Errore nell'inizializzazione del bot Discord: " + e.getMessage());
+            getLogger().severe("Error initializing Discord bot: " + e.getMessage());
             getServer().getPluginManager().disablePlugin(this);
         }
     }

@@ -1,158 +1,158 @@
 # ================================
 # MESSAGES.YML - ControlPlayers
 # ================================
-# File di configurazione per tutti i messaggi del plugin
-# Supporta i colori Discord Embed e placeholder dinamici
+# Configuration file for all plugin messages
+# Supports Discord Embed colors and dynamic placeholders
 
-# ===== MESSAGGI DI ERRORE =====
+# ===== ERROR MESSAGES =====
 errors:
-  no-permission: "[X] Non hai il permesso di usare questi comandi!"
-  no-history-permission: "[X] Non hai il permesso di usare questo comando!"
-  channel-not-allowed: "[X] Non puoi usare comandi in questo canale!"
-  command-not-found: "[X] Comando non riconosciuto! Usa `%prefix%help` per vedere i comandi disponibili."
-  database-unavailable: "[X] Database non disponibile!"
-  player-not-found: "[X] Player `%player%` non trovato!"
-  player-not-online: "[X] Player `%player%` non è online!"
-  player-offline: "[X] Player `%player%` non è online al momento!"
-  general-error: "[X] Si è verificato un errore durante l'esecuzione del comando!"
+  no-permission: "[X] You don't have permission to use these commands!"
+  no-history-permission: "[X] You don't have permission to use this command!"
+  channel-not-allowed: "[X] You can't use commands in this channel!"
+  command-not-found: "[X] Command not recognized! Use `%prefix%help` to see the available commands."
+  database-unavailable: "[X] Database unavailable!"
+  player-not-found: "[X] Player `%player%` not found!"
+  player-not-online: "[X] Player `%player%` is not online!"
+  player-offline: "[X] Player `%player%` is currently offline!"
+  general-error: "[X] An error occurred while executing the command!"
 
-# ===== MESSAGGI DI UTILIZZO =====
+# ===== USAGE MESSAGES =====
 usage:
-  ban: "[X] Uso corretto: `%prefix%ban <player> [durata] [motivo]`"
-  kick: "[X] Uso corretto: `%prefix%kick <player> [motivo]`"
-  mute: "[X] Uso corretto: `%prefix%mute <player> [durata] [motivo]`"
-  unban: "[X] Uso corretto: `%prefix%unban <player>`"
-  unmute: "[X] Uso corretto: `%prefix%unmute <player>`"
-  ip: "[X] Uso corretto: `%prefix%ip <player>`"
-  histstaff: "[X] Uso corretto: `%prefix%histstaff <discord_user_id>`"
+  ban: "[X] Correct usage: `%prefix%ban <player> [duration] [reason]`"
+  kick: "[X] Correct usage: `%prefix%kick <player> [reason]`"
+  mute: "[X] Correct usage: `%prefix%mute <player> [duration] [reason]`"
+  unban: "[X] Correct usage: `%prefix%unban <player>`"
+  unmute: "[X] Correct usage: `%prefix%unmute <player>`"
+  ip: "[X] Correct usage: `%prefix%ip <player>`"
+  histstaff: "[X] Correct usage: `%prefix%histstaff <discord_user_id>`"
 
-# ===== EMBED - LISTA PLAYER =====
+# ===== EMBED - PLAYER LIST =====
 players:
-  title: "[>] Player Online (%online%/%max%)"
-  no-players: "Nessun player online al momento."
+  title: "[>] Online Players (%online%/%max%)"
+  no-players: "No players online at the moment."
   footer: ""
 
-# ===== EMBED - COMANDI DI MODERAZIONE =====
+# ===== EMBED - MODERATION COMMANDS =====
 moderation:
   ban:
-    title: "[BAN] Player Bannato"
+    title: "[BAN] Player Banned"
     player-field: "Player"
-    duration-field: "Durata"
-    reason-field: "Motivo"
-    staff-field: "Bannato da"
+    duration-field: "Duration"
+    reason-field: "Reason"
+    staff-field: "Banned by"
     footer: ""
 
   kick:
-    title: "[KICK] Player Kickato"
+    title: "[KICK] Player Kicked"
     player-field: "Player"
-    reason-field: "Motivo"
-    staff-field: "Kickato da"
+    reason-field: "Reason"
+    staff-field: "Kicked by"
     footer: ""
 
   mute:
-    title: "[MUTE] Player Mutato"
+    title: "[MUTE] Player Muted"
     player-field: "Player"
-    duration-field: "Durata"
-    reason-field: "Motivo"
-    staff-field: "Mutato da"
+    duration-field: "Duration"
+    reason-field: "Reason"
+    staff-field: "Muted by"
     footer: ""
 
   unban:
-    title: "[UNBAN] Player Sbannato"
+    title: "[UNBAN] Player Unbanned"
     player-field: "Player"
     staff-field: "Staff"
     footer: ""
 
   unmute:
-    title: "[UNMUTE] Player Smutato"
+    title: "[UNMUTE] Player Unmuted"
     player-field: "Player"
     staff-field: "Staff"
     footer: ""
 
-# ===== EMBED - COMANDO IP =====
+# ===== EMBED - IP COMMAND =====
 ip:
-  title: "[IP] Informazioni IP Player"
+  title: "[IP] Player IP Information"
   player-field: "Player"
-  ip-field: "Indirizzo IP"
-  staff-field: "Richiesto da"
-  footer: "(!!) Informazione sensibile - Tratta con riservatezza"
+  ip-field: "IP Address"
+  staff-field: "Requested by"
+  footer: "(!!) Sensitive information - Handle with care"
 
-# ===== EMBED - CRONOLOGIA STAFF =====
+# ===== EMBED - STAFF HISTORY =====
 history:
-  title: "[STORIA] Cronologia Comandi Staff"
-  no-commands: "Nessun comando trovato per l'utente ID: `%user_id%`"
-  total-commands: "**Totale comandi eseguiti:** %total%"
-  recent-commands: "**Ultimi %count% comandi:**"
-  more-commands: "*... e altri %count% comandi*"
-  user-field: "Utente Discord"
-  requested-field: "Richiesto da"
-  limit-field: "Limite visualizzazione"
-  footer: "Usa il comando con cautela - Informazioni sensibili"
+  title: "[HISTORY] Staff Command History"
+  no-commands: "No commands found for user ID: `%user_id%`"
+  total-commands: "**Total commands executed:** %total%"
+  recent-commands: "**Last %count% commands:**"
+  more-commands: "*... and %count% more commands*"
+  user-field: "Discord User"
+  requested-field: "Requested by"
+  limit-field: "Display limit"
+  footer: "Use this command carefully - Sensitive information"
 
 # ===== EMBED - HELP =====
 help:
-  title: "[HELP] Comandi Disponibili"
-  description: "Ecco tutti i comandi che puoi utilizzare:"
+  title: "[HELP] Available Commands"
+  description: "Here are all the commands you can use:"
   commands:
-    players: "Mostra la lista dei player online"
-    ban: "Banna un player dal server"
-    unban: "Sbanna un player dal server"
-    kick: "Kicka un player dal server"
-    mute: "Muta un player nel server"
-    unmute: "Smuta un player nel server"
-    ip: "Mostra l'IP del player (solo se online)"
-    histstaff: "Mostra la cronologia comandi di uno staff"
-    help: "Mostra questo messaggio di aiuto"
-  footer: "Esempi durata: 1h, 30m, 1d, permanent"
+    players: "Show the list of online players"
+    ban: "Ban a player from the server"
+    unban: "Unban a player from the server"
+    kick: "Kick a player from the server"
+    mute: "Mute a player on the server"
+    unmute: "Unmute a player on the server"
+    ip: "Show a player's IP (only if online)"
+    histstaff: "Show a staff member's command history"
+    help: "Show this help message"
+  footer: "Duration examples: 1h, 30m, 1d, permanent"
 
-# ===== MESSAGGI DI LOG =====
+# ===== LOG MESSAGES =====
 log:
-  players-requested: "Lista player richiesta"
-  player-not-found: "Player non trovato"
-  player-not-online: "Player non online"
-  command-success: "Comando eseguito con successo"
-  ip-retrieved: "IP recuperato: %ip%"
-  history-requested: "Cronologia richiesta per %user_id%"
-  help-displayed: "Menu di aiuto visualizzato"
-  error-history: "[X] Errore nel recupero della cronologia comandi!"
+  players-requested: "Player list requested"
+  player-not-found: "Player not found"
+  player-not-online: "Player not online"
+  command-success: "Command executed successfully"
+  ip-retrieved: "IP retrieved: %ip%"
+  history-requested: "History requested for %user_id%"
+  help-displayed: "Help menu displayed"
+  error-history: "[X] Error retrieving command history!"
 
-# ===== VALORI PREDEFINITI =====
+# ===== DEFAULT VALUES =====
 defaults:
-  ban-reason: "Violazione regole server"
-  kick-reason: "Kickato dallo staff"
-  mute-reason: "Comportamento inappropriato"
+  ban-reason: "Server rules violation"
+  kick-reason: "Kicked by staff"
+  mute-reason: "Inappropriate behavior"
   mute-duration: "1h"
   ban-duration: "permanent"
 
-# ===== COLORI EMBED (HEX) =====
+# ===== EMBED COLORS (HEX) =====
 colors:
-  success: "#00FF00"    # Verde
-  error: "#FF0000"      # Rosso
-  warning: "#FFA500"    # Arancione
-  info: "#0099FF"       # Blu
-  ban: "#FF0000"        # Rosso
-  kick: "#FFFF00"       # Giallo
-  mute: "#FFA500"       # Arancione
-  unban: "#00FF00"      # Verde
-  unmute: "#00FF00"     # Verde
-  ip: "#00FFFF"         # Ciano
-  history: "#0099FF"    # Blu
-  help: "#0099FF"       # Blu
-  players: "#00FF00"    # Verde
+  success: "#00FF00"    # Green
+  error: "#FF0000"      # Red
+  warning: "#FFA500"    # Orange
+  info: "#0099FF"       # Blue
+  ban: "#FF0000"        # Red
+  kick: "#FFFF00"       # Yellow
+  mute: "#FFA500"       # Orange
+  unban: "#00FF00"      # Green
+  unmute: "#00FF00"     # Green
+  ip: "#00FFFF"         # Cyan
+  history: "#0099FF"    # Blue
+  help: "#0099FF"       # Blue
+  players: "#00FF00"    # Green
 
-# ===== NOTE =====
-# Placeholder disponibili:
-# %prefix% - Prefix dei comandi Discord
-# %player% - Nome del player target
-# %duration% - Durata dell'azione
-# %reason% - Motivo dell'azione
-# %staff% - Nome dello staff che ha eseguito il comando
-# %user_id% - ID Discord dell'utente
-# %online% - Numero di player online
-# %max% - Numero massimo di player
-# %total% - Numero totale (per statistiche)
-# %count% - Contatore generico
-# %ip% - Indirizzo IP
+# ===== NOTES =====
+# Available placeholders:
+# %prefix% - Discord command prefix
+# %player% - Target player's name
+# %duration% - Duration of the action
+# %reason% - Reason for the action
+# %staff% - Name of the staff who executed the command
+# %user_id% - Discord user's ID
+# %online% - Number of online players
+# %max% - Maximum number of players
+# %total% - Total number (for stats)
+# %count% - Generic counter
+# %ip% - IP Address
 
-# I colori devono essere in formato HEX (#RRGGBB)
-# Per disabilitare un footer, lasciare il campo vuoto: footer: ""
+# Colors must be in HEX format (#RRGGBB)
+# To disable a footer, leave the field empty: footer: ""

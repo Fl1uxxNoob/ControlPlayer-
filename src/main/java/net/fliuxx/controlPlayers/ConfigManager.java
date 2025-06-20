@@ -37,7 +37,7 @@ public class ConfigManager {
         return config.getString("commands.mute", "mute %player% %duration% %reason%");
     }
 
-    // Nuovi metodi per unban e unmute
+    // New methods for unban and unmute
     public String getUnbanCommand() {
         return config.getString("commands.unban", "unban %player%");
     }
@@ -54,17 +54,17 @@ public class ConfigManager {
         return config.getStringList("discord.allowed-users").contains(userId);
     }
 
-    // Nuovo metodo per controllare i permessi di histstaff
+    // New method to check histstaff permissions
     public boolean hasHistoryPermission(String userId) {
         return config.getStringList("discord.history-allowed-users").contains(userId);
     }
 
-    // Metodo per ottenere il limite massimo di record da mostrare
+    // Method to get the maximum number of history records
     public int getHistoryLimit() {
         return config.getInt("database.max-history-records", 50);
     }
 
-    // Metodo per controllare se il database è abilitato
+    // Method to check if the database is enabled
     public boolean isDatabaseEnabled() {
         return config.getBoolean("database.enabled", true);
     }

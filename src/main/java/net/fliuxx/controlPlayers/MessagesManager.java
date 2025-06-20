@@ -24,14 +24,14 @@ public class MessagesManager {
     public void loadMessages() {
         messagesFile = new File(plugin.getDataFolder(), "messages.yml");
 
-        // Crea il file se non esiste
+        // Create the file if it doesn't exist
         if (!messagesFile.exists()) {
             plugin.saveResource("messages.yml", false);
         }
 
         messagesConfig = YamlConfiguration.loadConfiguration(messagesFile);
 
-        // Verifica e aggiorna il file con nuove chiavi se necessario
+        // Check and update the file with new keys if needed
         InputStream defConfigStream = plugin.getResource("messages.yml");
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream));
@@ -45,18 +45,18 @@ public class MessagesManager {
         try {
             messagesConfig.save(messagesFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Impossibile salvare messages.yml: " + e.getMessage());
+            plugin.getLogger().severe("Unable to save messages.yml: " + e.getMessage());
         }
     }
 
     public void reloadMessages() {
         loadMessages();
-        plugin.getLogger().info("Messages.yml ricaricato!");
+        plugin.getLogger().info("messages.yml reloaded!");
     }
 
-    // Metodo principale per ottenere un messaggio con placeholder
+    // Main method of getting a placeholder message
     public String getMessage(String path, Map<String, String> placeholders) {
-        String message = messagesConfig.getString(path, "Messaggio non trovato: " + path);
+        String message = messagesConfig.getString(path, "Message not found: " + path);
 
         if (placeholders != null) {
             for (Map.Entry<String, String> entry : placeholders.entrySet()) {
@@ -67,12 +67,12 @@ public class MessagesManager {
         return message;
     }
 
-    // Metodo semplificato per messaggi senza placeholder
+    // Simplified method for messages without placeholders
     public String getMessage(String path) {
         return getMessage(path, null);
     }
 
-    // Metodi di convenienza per messaggi di errore
+    // Convenience methods for error messages
     public String getErrorMessage(String errorType) {
         return getMessage("errors." + errorType);
     }
@@ -81,25 +81,25 @@ public class MessagesManager {
         return getMessage("errors." + errorType, placeholders);
     }
 
-    // Metodi di convenienza per messaggi di utilizzo
+    // Convenience methods for usage messages
     public String getUsageMessage(String command, String prefix) {
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("prefix", prefix);
         return getMessage("usage." + command, placeholders);
     }
 
-    // Metodi per ottenere i colori
+    // Methods of obtaining colors
     public Color getColor(String colorType) {
         String hexColor = messagesConfig.getString("colors." + colorType, "#0099FF");
         try {
             return Color.decode(hexColor);
         } catch (NumberFormatException e) {
-            plugin.getLogger().warning("Colore non valido per " + colorType + ": " + hexColor);
-            return Color.BLUE; // Colore di fallback
+            plugin.getLogger().warning("Invalid color for " + colorType + ": " + hexColor);
+            return Color.BLUE; // Fallback color
         }
     }
 
-    // Metodi specifici per i titoli degli embed
+    // Specific methods for embed titles
     public String getEmbedTitle(String embedType) {
         return getMessage(embedType + ".title");
     }
@@ -108,23 +108,23 @@ public class MessagesManager {
         return getMessage(embedType + ".title", placeholders);
     }
 
-    // Metodi per i field degli embed
+    // Methods for embed fields
     public String getFieldName(String embedType, String fieldType) {
         return getMessage(embedType + "." + fieldType + "-field");
     }
 
-    // Metodi per i footer degli embed
+    // Methods for embed footers
     public String getFooter(String embedType) {
         String footer = getMessage(embedType + ".footer");
         return footer.isEmpty() ? null : footer;
     }
 
-    // Metodi per valori predefiniti
+    // Methods for default values
     public String getDefaultValue(String type) {
         return getMessage("defaults." + type);
     }
 
-    // Metodi specifici per tipi comuni di messaggi
+    // Specific methods for common types of messages
     public String getPlayerNotFoundError(String playerName) {
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("player", playerName);
@@ -155,7 +155,7 @@ public class MessagesManager {
         return getErrorMessage("command-not-found", placeholders);
     }
 
-    // Metodi per i messaggi di log
+    // Methods for log messages
     public String getLogMessage(String logType) {
         return getMessage("log." + logType);
     }
@@ -164,7 +164,7 @@ public class MessagesManager {
         return getMessage("log." + logType, placeholders);
     }
 
-    // Metodo per creare placeholder map velocemente
+    // Method to create placeholder map quickly
     public Map<String, String> createPlaceholders(String... keyValuePairs) {
         Map<String, String> placeholders = new HashMap<>();
         for (int i = 0; i < keyValuePairs.length; i += 2) {
@@ -175,24 +175,24 @@ public class MessagesManager {
         return placeholders;
     }
 
-    // Metodi specifici per i comandi help
+    // Specific methods for help commands
     public String getHelpCommandDescription(String command) {
         return getMessage("help.commands." + command);
     }
 
-    // Verifica se un messaggio esiste
+    // Check if a message exists
     public boolean hasMessage(String path) {
         return messagesConfig.contains(path);
     }
 
-    // Debug: stampa tutti i messaggi disponibili
+    // Debug: print all available messages
     public void printAvailableMessages() {
-        plugin.getLogger().info("=== MESSAGGI DISPONIBILI ===");
+        plugin.getLogger().info("=== MESSAGES AVAILABLE ===");
         for (String key : messagesConfig.getKeys(true)) {
             if (!messagesConfig.isConfigurationSection(key)) {
                 plugin.getLogger().info(key + ": " + messagesConfig.getString(key));
             }
         }
-        plugin.getLogger().info("=== FINE MESSAGGI ===");
+        plugin.getLogger().info("=== END MESSAGES ===");
     }
 }

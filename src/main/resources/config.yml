@@ -1,89 +1,89 @@
-# Configurazione ControlPlayer
+# ControlPlayer Configuration
 
 discord:
-  # Token del bot Discord (OBBLIGATORIO)
-  token: "IL_TUO_TOKEN_QUI"
+  # Discord bot token (REQUIRED)
+  token: "YOUR_TOKEN_HERE"
 
-  # Prefix per i comandi Discord (modificabile)
+  # Prefix for Discord commands (customizable)
   prefix: "!"
 
-  # Canali Discord dove i comandi sono permessi (ID dei canali)
+  # Discord channels where commands are allowed (channel IDs)
   allowed-channels:
-    - "123456789012345678"  # Sostituisci con l'ID del tuo canale
-    - "987654321098765432"  # Puoi aggiungere più canali
+    - "123456789012345678"  # Replace with your channel ID
+    - "987654321098765432"  # You can add more channels
 
-  # Utenti Discord che possono usare i comandi base (ID degli utenti)
+  # Discord users allowed to use basic commands (user IDs)
   allowed-users:
-    - "123456789012345678"  # Sostituisci con il tuo ID Discord
-    - "987654321098765432"  # Puoi aggiungere più utenti admin
+    - "123456789012345678"  # Replace with your Discord ID
+    - "987654321098765432"  # You can add more admin users
 
-  # Utenti Discord che possono usare il comando histstaff (ID degli utenti)
-  # ATTENZIONE: Questo comando mostra informazioni sensibili!
+  # Discord users allowed to use the histstaff command (user IDs)
+  # WARNING: This command reveals sensitive information!
   history-allowed-users:
-    - "123456789012345678"  # Solo admin di alto livello
-    # - "altro_id_admin"    # Decommentare e sostituire per aggiungere altri
+    - "123456789012345678"  # Only high-level admins
+    # - "another_admin_id"  # Uncomment and replace to add more
 
-# Configurazione Database
+# Database Configuration
 database:
-  # Abilita/disabilita il sistema di logging nel database
+  # Enable/disable logging system in the database
   enabled: true
 
-  # Numero massimo di record da mostrare nel comando histstaff
+  # Maximum number of records shown in the histstaff command
   max-history-records: 50
 
-# Comandi da eseguire sul server Minecraft
-# Placeholder disponibili: %player%, %duration%, %reason%
+# Commands to execute on the Minecraft server
+# Available placeholders: %player%, %duration%, %reason%
 commands:
-  # Comando per bannare (personalizzabile per LiteBans, EssentialsX, etc.)
+  # Command to ban (customizable for LiteBans, EssentialsX, etc.)
   ban: "ban %player% %duration% %reason%"
 
-  # Comando per kickare
+  # Command to kick
   kick: "kick %player% %reason%"
 
-  # Comando per mutare
+  # Command to mute
   mute: "mute %player% %duration% %reason%"
 
-  # Comando per sbannare
+  # Command to unban
   unban: "unban %player%"
 
-  # Comando per smutare
+  # Command to unmute
   unmute: "unmute %player%"
 
-# Esempi di configurazione per plugin popolari:
+# Example configurations for popular plugins:
 #
-# Per LiteBans:
+# For LiteBans:
 # ban: "litebans:ban %player% %duration% %reason%"
 # mute: "litebans:mute %player% %duration% %reason%"
 # kick: "litebans:kick %player% %reason%"
 # unban: "litebans:unban %player%"
 # unmute: "litebans:unmute %player%"
 #
-# Per EssentialsX:
+# For EssentialsX:
 # ban: "essentials:ban %player% %reason%"
 # mute: "essentials:mute %player% %duration% %reason%"
 # kick: "essentials:kick %player% %reason%"
 # unban: "essentials:unban %player%"
 # unmute: "essentials:mute %player% remove"
 #
-# Per AdvancedBan:
+# For AdvancedBan:
 # ban: "advancedban:ban %player% %duration% %reason%"
 # mute: "advancedban:mute %player% %duration% %reason%"
 # kick: "advancedban:kick %player% %reason%"
 # unban: "advancedban:unban %player%"
 # unmute: "advancedban:unmute %player%"
 
-# ===== CONFIGURAZIONE SICUREZZA =====
+# ===== SECURITY CONFIGURATION =====
 #
-# IMPORTANTE: Il comando 'histstaff' mostra informazioni sensibili inclusi:
-# - Chi ha eseguito quali comandi
-# - Quando sono stati eseguiti
-# - Su quali player
-# - I motivi delle azioni
+# IMPORTANT: The 'histstaff' command reveals sensitive information including:
+# - Who executed which commands
+# - When they were executed
+# - Which players were targeted
+# - The reasons for the actions
 #
-# Assicurati di dare accesso a questo comando solo ai tuoi admin più fidati!
-# Gli ID utente nella sezione 'history-allowed-users' devono essere utenti
-# di massima fiducia nel tuo staff.
+# Make sure to grant access to this command only to your most trusted admins!
+# The user IDs in the 'history-allowed-users' section should belong to
+# your most trusted staff members.
 #
-# Per ottenere l'ID di un utente Discord:
-# 1. Abilita la modalità sviluppatore in Discord
-# 2. Clicca destro sull'utente e seleziona "Copia ID"
+# To obtain a Discord user's ID:
+# 1. Enable Developer Mode in Discord
+# 2. Right-click the user and select "Copy ID"

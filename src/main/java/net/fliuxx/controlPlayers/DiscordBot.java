@@ -40,7 +40,7 @@ public class DiscordBot extends ListenerAdapter {
         String channelId = event.getChannel().getId();
         String userId = event.getAuthor().getId();
 
-        // Controllo permessi base
+        // Basic permission check
         if (!config.isChannelAllowed(channelId)) {
             event.getChannel().sendMessage(messages.getChannelNotAllowedError()).queue();
             return;
@@ -49,7 +49,7 @@ public class DiscordBot extends ListenerAdapter {
         String[] args = message.substring(prefix.length()).split(" ");
         String command = args[0].toLowerCase();
 
-        // Controllo speciale per histstaff
+        // Special check for histstaff
         if (command.equals("histstaff")) {
             if (!config.hasHistoryPermission(userId)) {
                 event.getChannel().sendMessage(messages.getNoHistoryPermissionError()).queue();
@@ -59,7 +59,7 @@ public class DiscordBot extends ListenerAdapter {
             return;
         }
 
-        // Controllo permessi normali per altri comandi
+        // Standard permission check for other commands
         if (!config.hasPermission(userId)) {
             event.getChannel().sendMessage(messages.getNoPermissionError()).queue();
             return;
@@ -97,7 +97,7 @@ public class DiscordBot extends ListenerAdapter {
                     return;
                 }
                 messages.reloadMessages();
-                event.getChannel().sendMessage("✅ Messaggi ricaricati con successo!").queue();
+                event.getChannel().sendMessage("✅ Messages successfully reloaded!").queue();
                 break;
             default:
                 event.getChannel().sendMessage(messages.getCommandNotFoundError(prefix)).queue();
@@ -136,7 +136,7 @@ public class DiscordBot extends ListenerAdapter {
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
         });
 
-        // Log del comando
+        // Log the command
         logCommand(event, "PLAYERS", null, null, null, messages.getLogMessage("players-requested"));
     }
 
@@ -396,7 +396,7 @@ public class DiscordBot extends ListenerAdapter {
         String targetUserId = args[1];
         int limit = config.getHistoryLimit();
 
-        // Esegui la query in un thread separato per non bloccare il bot
+        // Run the query in a separate thread to avoid blocking the bot
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 List<DatabaseManager.StaffCommandRecord> records = database.getCommandHistory(targetUserId, limit);
@@ -418,7 +418,7 @@ public class DiscordBot extends ListenerAdapter {
                     Map<String, String> countPlaceholders = messages.createPlaceholders("count", String.valueOf(Math.min(records.size(), limit)));
                     history.append(messages.getMessage("history.recent-commands", countPlaceholders)).append("\n\n");
 
-                    for (int i = 0; i < Math.min(records.size(), 10); i++) { // Mostra max 10 per evitare messaggi troppo lunghi
+                    for (int i = 0; i < Math.min(records.size(), 10); i++) { // Show max 10 to avoid overly long messages
                         DatabaseManager.StaffCommandRecord record = records.get(i);
                         history.append("**").append(i + 1).append(".** `").append(record.getCommandType()).append("`");
 
@@ -462,12 +462,12 @@ public class DiscordBot extends ListenerAdapter {
 
                 event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
-                // Log anche questo comando
+                // Also log this command
                 Map<String, String> logPlaceholders = messages.createPlaceholders("user_id", targetUserId);
                 logCommand(event, "HISTSTAFF", targetUserId, null, null, messages.getLogMessage("history-requested", logPlaceholders));
 
             } catch (Exception e) {
-                plugin.getLogger().warning("Errore nel recupero della cronologia: " + e.getMessage());
+                plugin.getLogger().warning("Error retrieving history: " + e.getMessage());
                 event.getChannel().sendMessage(messages.getLogMessage("error-history")).queue();
             }
         });
@@ -490,7 +490,7 @@ public class DiscordBot extends ListenerAdapter {
         embed.addField(prefix + "unmute <player>", messages.getHelpCommandDescription("unmute"), false);
         embed.addField(prefix + "ip <player>", messages.getHelpCommandDescription("ip"), false);
 
-        // Mostra il comando histstaff solo agli utenti autorizzati
+        // Only show the histstaff command to authorized users
         if (config.hasHistoryPermission(userId)) {
             embed.addField(prefix + "histstaff <discord_user_id>", messages.getHelpCommandDescription("histstaff"), false);
         }
@@ -511,7 +511,7 @@ public class DiscordBot extends ListenerAdapter {
     private void logCommand(MessageReceivedEvent event, String commandType, String targetPlayer,
                             String duration, String reason, String serverResponse) {
         if (database != null) {
-            // Esegui il logging in modo asincrono per non bloccare il bot
+            // Perform logging asynchronously to avoid blocking the bot
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                 database.logCommand(
                         event.getAuthor().getId(),

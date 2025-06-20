@@ -20,22 +20,22 @@ public class DatabaseManager {
 
     public void initialize() {
         try {
-            // Crea la cartella del plugin se non esiste
+            // Create the plugin folder if it doesn't exist
             plugin.getDataFolder().mkdirs();
 
-            // Carica il driver SQLite
+            // Load the SQLite driver
             Class.forName("org.sqlite.JDBC");
 
-            // Stabilisce la connessione al database SQLite
+            // Establish the SQLite database connection
             connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
 
-            // Crea la tabella se non esiste
+            // Create the table if it doesn't exist
             createTable();
 
-            plugin.getLogger().info("Database inizializzato con successo!");
+            plugin.getLogger().info("Database initialized successfully!");
 
         } catch (SQLException | ClassNotFoundException e) {
-            plugin.getLogger().severe("Errore nell'inizializzazione del database: " + e.getMessage());
+            plugin.getLogger().severe("Error initializing database: " + e.getMessage());
         }
     }
 
@@ -79,7 +79,7 @@ public class DatabaseManager {
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
-            plugin.getLogger().warning("Errore nel logging del comando: " + e.getMessage());
+            plugin.getLogger().warning("Error while logging the command: " + e.getMessage());
         }
     }
 
@@ -114,7 +114,7 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) {
-            plugin.getLogger().warning("Errore nel recupero della cronologia: " + e.getMessage());
+            plugin.getLogger().warning("Error retrieving command history: " + e.getMessage());
         }
 
         return records;
@@ -149,7 +149,7 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) {
-            plugin.getLogger().warning("Errore nel recupero dei comandi recenti: " + e.getMessage());
+            plugin.getLogger().warning("Error retrieving recent commands: " + e.getMessage());
         }
 
         return records;
@@ -167,7 +167,7 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) {
-            plugin.getLogger().warning("Errore nel conteggio dei comandi: " + e.getMessage());
+            plugin.getLogger().warning("Error counting commands: " + e.getMessage());
         }
 
         return 0;
@@ -181,14 +181,14 @@ public class DatabaseManager {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                plugin.getLogger().info("Connessione database chiusa.");
+                plugin.getLogger().info("Database connection closed.");
             }
         } catch (SQLException e) {
-            plugin.getLogger().warning("Errore nella chiusura del database: " + e.getMessage());
+            plugin.getLogger().warning("Error closing database: " + e.getMessage());
         }
     }
 
-    // Classe per rappresentare un record di comando
+    // Class representing a command record
     public static class StaffCommandRecord {
         private final int id;
         private final String discordUserId;
@@ -227,7 +227,7 @@ public class DatabaseManager {
 
         public String getFormattedTimestamp() {
             try {
-                // Converte il timestamp del database in un formato più leggibile
+                // Converts the database timestamp into a readable format
                 return timestamp.replace("T", " ").substring(0, 19);
             } catch (Exception e) {
                 return timestamp;
