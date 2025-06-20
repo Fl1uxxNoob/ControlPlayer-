@@ -6,36 +6,36 @@
 
 # ===== MESSAGGI DI ERRORE =====
 errors:
-  no-permission: "❌ Non hai il permesso di usare questi comandi!"
-  no-history-permission: "❌ Non hai il permesso di usare questo comando!"
-  channel-not-allowed: "❌ Non puoi usare comandi in questo canale!"
-  command-not-found: "❌ Comando non riconosciuto! Usa `%prefix%help` per vedere i comandi disponibili."
-  database-unavailable: "❌ Database non disponibile!"
-  player-not-found: "❌ Player `%player%` non trovato!"
-  player-not-online: "❌ Player `%player%` non è online!"
-  player-offline: "❌ Player `%player%` non è online al momento!"
-  general-error: "❌ Si è verificato un errore durante l'esecuzione del comando!"
+  no-permission: "[X] Non hai il permesso di usare questi comandi!"
+  no-history-permission: "[X] Non hai il permesso di usare questo comando!"
+  channel-not-allowed: "[X] Non puoi usare comandi in questo canale!"
+  command-not-found: "[X] Comando non riconosciuto! Usa `%prefix%help` per vedere i comandi disponibili."
+  database-unavailable: "[X] Database non disponibile!"
+  player-not-found: "[X] Player `%player%` non trovato!"
+  player-not-online: "[X] Player `%player%` non è online!"
+  player-offline: "[X] Player `%player%` non è online al momento!"
+  general-error: "[X] Si è verificato un errore durante l'esecuzione del comando!"
 
 # ===== MESSAGGI DI UTILIZZO =====
 usage:
-  ban: "❌ Uso corretto: `%prefix%ban <player> [durata] [motivo]`"
-  kick: "❌ Uso corretto: `%prefix%kick <player> [motivo]`"
-  mute: "❌ Uso corretto: `%prefix%mute <player> [durata] [motivo]`"
-  unban: "❌ Uso corretto: `%prefix%unban <player>`"
-  unmute: "❌ Uso corretto: `%prefix%unmute <player>`"
-  ip: "❌ Uso corretto: `%prefix%ip <player>`"
-  histstaff: "❌ Uso corretto: `%prefix%histstaff <discord_user_id>`"
+  ban: "[X] Uso corretto: `%prefix%ban <player> [durata] [motivo]`"
+  kick: "[X] Uso corretto: `%prefix%kick <player> [motivo]`"
+  mute: "[X] Uso corretto: `%prefix%mute <player> [durata] [motivo]`"
+  unban: "[X] Uso corretto: `%prefix%unban <player>`"
+  unmute: "[X] Uso corretto: `%prefix%unmute <player>`"
+  ip: "[X] Uso corretto: `%prefix%ip <player>`"
+  histstaff: "[X] Uso corretto: `%prefix%histstaff <discord_user_id>`"
 
 # ===== EMBED - LISTA PLAYER =====
 players:
-  title: "🎮 Player Online (%online%/%max%)"
+  title: "[>] Player Online (%online%/%max%)"
   no-players: "Nessun player online al momento."
   footer: ""
 
 # ===== EMBED - COMANDI DI MODERAZIONE =====
 moderation:
   ban:
-    title: "🔨 Player Bannato"
+    title: "[BAN] Player Bannato"
     player-field: "Player"
     duration-field: "Durata"
     reason-field: "Motivo"
@@ -43,14 +43,14 @@ moderation:
     footer: ""
 
   kick:
-    title: "👢 Player Kickato"
+    title: "[KICK] Player Kickato"
     player-field: "Player"
     reason-field: "Motivo"
     staff-field: "Kickato da"
     footer: ""
 
   mute:
-    title: "🔇 Player Mutato"
+    title: "[MUTE] Player Mutato"
     player-field: "Player"
     duration-field: "Durata"
     reason-field: "Motivo"
@@ -58,28 +58,28 @@ moderation:
     footer: ""
 
   unban:
-    title: "✅ Player Sbannato"
+    title: "[UNBAN] Player Sbannato"
     player-field: "Player"
     staff-field: "Staff"
     footer: ""
 
   unmute:
-    title: "🔊 Player Smutato"
+    title: "[UNMUTE] Player Smutato"
     player-field: "Player"
     staff-field: "Staff"
     footer: ""
 
 # ===== EMBED - COMANDO IP =====
 ip:
-  title: "🌐 Informazioni IP Player"
+  title: "[IP] Informazioni IP Player"
   player-field: "Player"
   ip-field: "Indirizzo IP"
   staff-field: "Richiesto da"
-  footer: "⚠️ Informazione sensibile - Tratta con riservatezza"
+  footer: "(!!) Informazione sensibile - Tratta con riservatezza"
 
 # ===== EMBED - CRONOLOGIA STAFF =====
 history:
-  title: "📊 Cronologia Comandi Staff"
+  title: "[STORIA] Cronologia Comandi Staff"
   no-commands: "Nessun comando trovato per l'utente ID: `%user_id%`"
   total-commands: "**Totale comandi eseguiti:** %total%"
   recent-commands: "**Ultimi %count% comandi:**"
@@ -91,7 +91,7 @@ history:
 
 # ===== EMBED - HELP =====
 help:
-  title: "📋 Comandi Disponibili"
+  title: "[HELP] Comandi Disponibili"
   description: "Ecco tutti i comandi che puoi utilizzare:"
   commands:
     players: "Mostra la lista dei player online"
@@ -114,7 +114,7 @@ log:
   ip-retrieved: "IP recuperato: %ip%"
   history-requested: "Cronologia richiesta per %user_id%"
   help-displayed: "Menu di aiuto visualizzato"
-  error-history: "❌ Errore nel recupero della cronologia comandi!"
+  error-history: "[X] Errore nel recupero della cronologia comandi!"
 
 # ===== VALORI PREDEFINITI =====
 defaults:
