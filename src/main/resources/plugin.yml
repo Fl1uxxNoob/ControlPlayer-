@@ -1,5 +1,5 @@
 name: ControlPlayers
-version: '1.0'
+version: '1.1'
 main: net.fliuxx.controlPlayers.ControlPlayers
 api-version: 1.8
 description: Plugin to manage players via Discord
