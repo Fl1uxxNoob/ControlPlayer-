@@ -12,6 +12,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class DiscordBot extends ListenerAdapter {
 
@@ -41,7 +42,7 @@ public class DiscordBot extends ListenerAdapter {
 
         // Controllo permessi base
         if (!config.isChannelAllowed(channelId)) {
-            event.getChannel().sendMessage("❌ Non puoi usare comandi in questo canale!").queue();
+            event.getChannel().sendMessage(messages.getChannelNotAllowedError()).queue();
             return;
         }
 
@@ -51,7 +52,7 @@ public class DiscordBot extends ListenerAdapter {
         // Controllo speciale per histstaff
         if (command.equals("histstaff")) {
             if (!config.hasHistoryPermission(userId)) {
-                event.getChannel().sendMessage("❌ Non hai il permesso di usare questo comando!").queue();
+                event.getChannel().sendMessage(messages.getNoHistoryPermissionError()).queue();
                 return;
             }
             handleHistStaffCommand(event, args);
@@ -60,7 +61,7 @@ public class DiscordBot extends ListenerAdapter {
 
         // Controllo permessi normali per altri comandi
         if (!config.hasPermission(userId)) {
-            event.getChannel().sendMessage("❌ Non hai il permesso di usare questi comandi!").queue();
+            event.getChannel().sendMessage(messages.getNoPermissionError()).queue();
             return;
         }
 
@@ -99,7 +100,7 @@ public class DiscordBot extends ListenerAdapter {
                 event.getChannel().sendMessage("✅ Messaggi ricaricati con successo!").queue();
                 break;
             default:
-                event.getChannel().sendMessage("❌ Comando non riconosciuto! Usa `" + prefix + "help` per vedere i comandi disponibili.").queue();
+                event.getChannel().sendMessage(messages.getCommandNotFoundError(prefix)).queue();
         }
     }
 
@@ -108,11 +109,16 @@ public class DiscordBot extends ListenerAdapter {
             Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.setColor(Color.GREEN);
-            embed.setTitle("🎮 Player Online (" + players.size() + "/" + Bukkit.getMaxPlayers() + ")");
+            embed.setColor(messages.getColor("players"));
+
+            Map<String, String> placeholders = messages.createPlaceholders(
+                    "online", String.valueOf(players.size()),
+                    "max", String.valueOf(Bukkit.getMaxPlayers())
+            );
+            embed.setTitle(messages.getEmbedTitle("players", placeholders));
 
             if (players.isEmpty()) {
-                embed.setDescription("Nessun player online al momento.");
+                embed.setDescription(messages.getMessage("players.no-players"));
             } else {
                 StringBuilder playerList = new StringBuilder();
                 for (Player player : players) {
@@ -121,29 +127,34 @@ public class DiscordBot extends ListenerAdapter {
                 embed.setDescription(playerList.toString());
             }
 
+            String footer = messages.getFooter("players");
+            if (footer != null && !footer.isEmpty()) {
+                embed.setFooter(footer);
+            }
+
             embed.setTimestamp(java.time.Instant.now());
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
         });
 
         // Log del comando
-        logCommand(event, "PLAYERS", null, null, null, "Lista player richiesta");
+        logCommand(event, "PLAYERS", null, null, null, messages.getLogMessage("players-requested"));
     }
 
     private void handleBanCommand(MessageReceivedEvent event, String[] args) {
         if (args.length < 2) {
-            event.getChannel().sendMessage("❌ Uso corretto: `" + config.getCommandPrefix() + "ban <player> [durata] [motivo]`").queue();
+            event.getChannel().sendMessage(messages.getUsageMessage("ban", config.getCommandPrefix())).queue();
             return;
         }
 
         String playerName = args[1];
-        String duration = args.length > 2 ? args[2] : "permanent";
-        String reason = args.length > 3 ? String.join(" ", Arrays.copyOfRange(args, 3, args.length)) : "Violazione regole server";
+        String duration = args.length > 2 ? args[2] : messages.getDefaultValue("ban-duration");
+        String reason = args.length > 3 ? String.join(" ", Arrays.copyOfRange(args, 3, args.length)) : messages.getDefaultValue("ban-reason");
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             Player target = Bukkit.getPlayer(playerName);
             if (target == null && Bukkit.getOfflinePlayer(playerName).hasPlayedBefore() == false) {
-                event.getChannel().sendMessage("❌ Player `" + playerName + "` non trovato!").queue();
-                logCommand(event, "BAN", playerName, duration, reason, "Player non trovato");
+                event.getChannel().sendMessage(messages.getPlayerNotFoundError(playerName)).queue();
+                logCommand(event, "BAN", playerName, duration, reason, messages.getLogMessage("player-not-found"));
                 return;
             }
 
@@ -155,33 +166,39 @@ public class DiscordBot extends ListenerAdapter {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.setColor(Color.RED);
-            embed.setTitle("🔨 Player Bannato");
-            embed.addField("Player", playerName, true);
-            embed.addField("Durata", duration, true);
-            embed.addField("Motivo", reason, false);
-            embed.addField("Bannato da", event.getAuthor().getAsTag(), true);
+            embed.setColor(messages.getColor("ban"));
+            embed.setTitle(messages.getEmbedTitle("moderation.ban"));
+            embed.addField(messages.getFieldName("moderation.ban", "player"), playerName, true);
+            embed.addField(messages.getFieldName("moderation.ban", "duration"), duration, true);
+            embed.addField(messages.getFieldName("moderation.ban", "reason"), reason, false);
+            embed.addField(messages.getFieldName("moderation.ban", "staff"), event.getAuthor().getAsTag(), true);
+
+            String footer = messages.getFooter("moderation.ban");
+            if (footer != null && !footer.isEmpty()) {
+                embed.setFooter(footer);
+            }
+
             embed.setTimestamp(java.time.Instant.now());
 
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
-            logCommand(event, "BAN", playerName, duration, reason, "Comando eseguito con successo");
+            logCommand(event, "BAN", playerName, duration, reason, messages.getLogMessage("command-success"));
         });
     }
 
     private void handleKickCommand(MessageReceivedEvent event, String[] args) {
         if (args.length < 2) {
-            event.getChannel().sendMessage("❌ Uso corretto: `" + config.getCommandPrefix() + "kick <player> [motivo]`").queue();
+            event.getChannel().sendMessage(messages.getUsageMessage("kick", config.getCommandPrefix())).queue();
             return;
         }
 
         String playerName = args[1];
-        String reason = args.length > 2 ? String.join(" ", Arrays.copyOfRange(args, 2, args.length)) : "Kickato dallo staff";
+        String reason = args.length > 2 ? String.join(" ", Arrays.copyOfRange(args, 2, args.length)) : messages.getDefaultValue("kick-reason");
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             Player target = Bukkit.getPlayer(playerName);
             if (target == null) {
-                event.getChannel().sendMessage("❌ Player `" + playerName + "` non è online!").queue();
-                logCommand(event, "KICK", playerName, null, reason, "Player non online");
+                event.getChannel().sendMessage(messages.getPlayerNotOnlineError(playerName)).queue();
+                logCommand(event, "KICK", playerName, null, reason, messages.getLogMessage("player-not-online"));
                 return;
             }
 
@@ -192,33 +209,39 @@ public class DiscordBot extends ListenerAdapter {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.setColor(Color.YELLOW);
-            embed.setTitle("👢 Player Kickato");
-            embed.addField("Player", playerName, true);
-            embed.addField("Motivo", reason, false);
-            embed.addField("Kickato da", event.getAuthor().getAsTag(), true);
+            embed.setColor(messages.getColor("kick"));
+            embed.setTitle(messages.getEmbedTitle("moderation.kick"));
+            embed.addField(messages.getFieldName("moderation.kick", "player"), playerName, true);
+            embed.addField(messages.getFieldName("moderation.kick", "reason"), reason, false);
+            embed.addField(messages.getFieldName("moderation.kick", "staff"), event.getAuthor().getAsTag(), true);
+
+            String footer = messages.getFooter("moderation.kick");
+            if (footer != null && !footer.isEmpty()) {
+                embed.setFooter(footer);
+            }
+
             embed.setTimestamp(java.time.Instant.now());
 
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
-            logCommand(event, "KICK", playerName, null, reason, "Comando eseguito con successo");
+            logCommand(event, "KICK", playerName, null, reason, messages.getLogMessage("command-success"));
         });
     }
 
     private void handleMuteCommand(MessageReceivedEvent event, String[] args) {
         if (args.length < 2) {
-            event.getChannel().sendMessage("❌ Uso corretto: `" + config.getCommandPrefix() + "mute <player> [durata] [motivo]`").queue();
+            event.getChannel().sendMessage(messages.getUsageMessage("mute", config.getCommandPrefix())).queue();
             return;
         }
 
         String playerName = args[1];
-        String duration = args.length > 2 ? args[2] : "1h";
-        String reason = args.length > 3 ? String.join(" ", Arrays.copyOfRange(args, 3, args.length)) : "Comportamento inappropriato";
+        String duration = args.length > 2 ? args[2] : messages.getDefaultValue("mute-duration");
+        String reason = args.length > 3 ? String.join(" ", Arrays.copyOfRange(args, 3, args.length)) : messages.getDefaultValue("mute-reason");
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             Player target = Bukkit.getPlayer(playerName);
             if (target == null && Bukkit.getOfflinePlayer(playerName).hasPlayedBefore() == false) {
-                event.getChannel().sendMessage("❌ Player `" + playerName + "` non trovato!").queue();
-                logCommand(event, "MUTE", playerName, duration, reason, "Player non trovato");
+                event.getChannel().sendMessage(messages.getPlayerNotFoundError(playerName)).queue();
+                logCommand(event, "MUTE", playerName, duration, reason, messages.getLogMessage("player-not-found"));
                 return;
             }
 
@@ -230,22 +253,28 @@ public class DiscordBot extends ListenerAdapter {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.setColor(Color.ORANGE);
-            embed.setTitle("🔇 Player Mutato");
-            embed.addField("Player", playerName, true);
-            embed.addField("Durata", duration, true);
-            embed.addField("Motivo", reason, false);
-            embed.addField("Mutato da", event.getAuthor().getAsTag(), true);
+            embed.setColor(messages.getColor("mute"));
+            embed.setTitle(messages.getEmbedTitle("moderation.mute"));
+            embed.addField(messages.getFieldName("moderation.mute", "player"), playerName, true);
+            embed.addField(messages.getFieldName("moderation.mute", "duration"), duration, true);
+            embed.addField(messages.getFieldName("moderation.mute", "reason"), reason, false);
+            embed.addField(messages.getFieldName("moderation.mute", "staff"), event.getAuthor().getAsTag(), true);
+
+            String footer = messages.getFooter("moderation.mute");
+            if (footer != null && !footer.isEmpty()) {
+                embed.setFooter(footer);
+            }
+
             embed.setTimestamp(java.time.Instant.now());
 
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
-            logCommand(event, "MUTE", playerName, duration, reason, "Comando eseguito con successo");
+            logCommand(event, "MUTE", playerName, duration, reason, messages.getLogMessage("command-success"));
         });
     }
 
     private void handleUnbanCommand(MessageReceivedEvent event, String[] args) {
         if (args.length < 2) {
-            event.getChannel().sendMessage("❌ Uso corretto: `" + config.getCommandPrefix() + "unban <player>`").queue();
+            event.getChannel().sendMessage(messages.getUsageMessage("unban", config.getCommandPrefix())).queue();
             return;
         }
 
@@ -258,20 +287,26 @@ public class DiscordBot extends ListenerAdapter {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.setColor(Color.GREEN);
-            embed.setTitle("✅ Player Sbannato");
-            embed.addField("Player", playerName, true);
-            embed.addField("Staff", event.getAuthor().getAsTag(), true);
+            embed.setColor(messages.getColor("unban"));
+            embed.setTitle(messages.getEmbedTitle("moderation.unban"));
+            embed.addField(messages.getFieldName("moderation.unban", "player"), playerName, true);
+            embed.addField(messages.getFieldName("moderation.unban", "staff"), event.getAuthor().getAsTag(), true);
+
+            String footer = messages.getFooter("moderation.unban");
+            if (footer != null && !footer.isEmpty()) {
+                embed.setFooter(footer);
+            }
+
             embed.setTimestamp(java.time.Instant.now());
 
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
-            logCommand(event, "UNBAN", playerName, null, null, "Comando eseguito con successo");
+            logCommand(event, "UNBAN", playerName, null, null, messages.getLogMessage("command-success"));
         });
     }
 
     private void handleUnmuteCommand(MessageReceivedEvent event, String[] args) {
         if (args.length < 2) {
-            event.getChannel().sendMessage("❌ Uso corretto: `" + config.getCommandPrefix() + "unmute <player>`").queue();
+            event.getChannel().sendMessage(messages.getUsageMessage("unmute", config.getCommandPrefix())).queue();
             return;
         }
 
@@ -284,20 +319,26 @@ public class DiscordBot extends ListenerAdapter {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.setColor(Color.GREEN);
-            embed.setTitle("🔊 Player Smutato");
-            embed.addField("Player", playerName, true);
-            embed.addField("Staff", event.getAuthor().getAsTag(), true);
+            embed.setColor(messages.getColor("unmute"));
+            embed.setTitle(messages.getEmbedTitle("moderation.unmute"));
+            embed.addField(messages.getFieldName("moderation.unmute", "player"), playerName, true);
+            embed.addField(messages.getFieldName("moderation.unmute", "staff"), event.getAuthor().getAsTag(), true);
+
+            String footer = messages.getFooter("moderation.unmute");
+            if (footer != null && !footer.isEmpty()) {
+                embed.setFooter(footer);
+            }
+
             embed.setTimestamp(java.time.Instant.now());
 
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
-            logCommand(event, "UNMUTE", playerName, null, null, "Comando eseguito con successo");
+            logCommand(event, "UNMUTE", playerName, null, null, messages.getLogMessage("command-success"));
         });
     }
 
     private void handleIpCommand(MessageReceivedEvent event, String[] args) {
         if (args.length < 2) {
-            event.getChannel().sendMessage("❌ Uso corretto: `" + config.getCommandPrefix() + "ip <player>`").queue();
+            event.getChannel().sendMessage(messages.getUsageMessage("ip", config.getCommandPrefix())).queue();
             return;
         }
 
@@ -309,39 +350,46 @@ public class DiscordBot extends ListenerAdapter {
             if (target == null) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
                 if (!offlinePlayer.hasPlayedBefore()) {
-                    event.getChannel().sendMessage("❌ Player `" + playerName + "` non trovato!").queue();
-                    logCommand(event, "IP", playerName, null, null, "Player non trovato");
+                    event.getChannel().sendMessage(messages.getPlayerNotFoundError(playerName)).queue();
+                    logCommand(event, "IP", playerName, null, null, messages.getLogMessage("player-not-found"));
                     return;
                 }
-                event.getChannel().sendMessage("❌ Player `" + playerName + "` non è online al momento!").queue();
-                logCommand(event, "IP", playerName, null, null, "Player non online");
+                event.getChannel().sendMessage(messages.getPlayerNotOnlineError(playerName)).queue();
+                logCommand(event, "IP", playerName, null, null, messages.getLogMessage("player-not-online"));
                 return;
             }
 
             String playerIP = target.getAddress().getAddress().getHostAddress();
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.setColor(Color.CYAN);
-            embed.setTitle("🌐 Informazioni IP Player");
-            embed.addField("Player", playerName, true);
-            embed.addField("Indirizzo IP", playerIP, true);
-            embed.addField("Richiesto da", event.getAuthor().getAsTag(), true);
+            embed.setColor(messages.getColor("ip"));
+            embed.setTitle(messages.getEmbedTitle("ip"));
+            embed.addField(messages.getFieldName("ip", "player"), playerName, true);
+            embed.addField(messages.getFieldName("ip", "ip"), playerIP, true);
+            embed.addField(messages.getFieldName("ip", "staff"), event.getAuthor().getAsTag(), true);
+
+            String footer = messages.getFooter("ip");
+            if (footer != null && !footer.isEmpty()) {
+                embed.setFooter(footer);
+            }
+
             embed.setTimestamp(java.time.Instant.now());
-            embed.setFooter("⚠️ Informazione sensibile - Tratta con riservatezza");
 
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
-            logCommand(event, "IP", playerName, null, null, "IP recuperato: " + playerIP);
+
+            Map<String, String> logPlaceholders = messages.createPlaceholders("ip", playerIP);
+            logCommand(event, "IP", playerName, null, null, messages.getLogMessage("ip-retrieved", logPlaceholders));
         });
     }
 
     private void handleHistStaffCommand(MessageReceivedEvent event, String[] args) {
         if (database == null) {
-            event.getChannel().sendMessage("❌ Database non disponibile!").queue();
+            event.getChannel().sendMessage(messages.getErrorMessage("database-unavailable")).queue();
             return;
         }
 
         if (args.length < 2) {
-            event.getChannel().sendMessage("❌ Uso corretto: `" + config.getCommandPrefix() + "histstaff <discord_user_id>`").queue();
+            event.getChannel().sendMessage(messages.getUsageMessage("histstaff", config.getCommandPrefix())).queue();
             return;
         }
 
@@ -355,15 +403,20 @@ public class DiscordBot extends ListenerAdapter {
                 int totalCommands = database.getTotalCommandsCount(targetUserId);
 
                 EmbedBuilder embed = new EmbedBuilder();
-                embed.setColor(Color.BLUE);
-                embed.setTitle("📊 Cronologia Comandi Staff");
+                embed.setColor(messages.getColor("history"));
+                embed.setTitle(messages.getEmbedTitle("history"));
 
                 if (records.isEmpty()) {
-                    embed.setDescription("Nessun comando trovato per l'utente ID: `" + targetUserId + "`");
+                    Map<String, String> placeholders = messages.createPlaceholders("user_id", targetUserId);
+                    embed.setDescription(messages.getMessage("history.no-commands", placeholders));
                 } else {
                     StringBuilder history = new StringBuilder();
-                    history.append("**Totale comandi eseguiti:** ").append(totalCommands).append("\n");
-                    history.append("**Ultimi ").append(Math.min(records.size(), limit)).append(" comandi:**\n\n");
+
+                    Map<String, String> totalPlaceholders = messages.createPlaceholders("total", String.valueOf(totalCommands));
+                    history.append(messages.getMessage("history.total-commands", totalPlaceholders)).append("\n");
+
+                    Map<String, String> countPlaceholders = messages.createPlaceholders("count", String.valueOf(Math.min(records.size(), limit)));
+                    history.append(messages.getMessage("history.recent-commands", countPlaceholders)).append("\n\n");
 
                     for (int i = 0; i < Math.min(records.size(), 10); i++) { // Mostra max 10 per evitare messaggi troppo lunghi
                         DatabaseManager.StaffCommandRecord record = records.get(i);
@@ -389,26 +442,33 @@ public class DiscordBot extends ListenerAdapter {
                     }
 
                     if (records.size() > 10) {
-                        history.append("*... e altri ").append(records.size() - 10).append(" comandi*");
+                        Map<String, String> morePlaceholders = messages.createPlaceholders("count", String.valueOf(records.size() - 10));
+                        history.append(messages.getMessage("history.more-commands", morePlaceholders));
                     }
 
                     embed.setDescription(history.toString());
                 }
 
-                embed.addField("Utente Discord", "<@" + targetUserId + ">", true);
-                embed.addField("Richiesto da", event.getAuthor().getAsTag(), true);
-                embed.addField("Limite visualizzazione", String.valueOf(limit), true);
+                embed.addField(messages.getFieldName("history", "user"), "<@" + targetUserId + ">", true);
+                embed.addField(messages.getFieldName("history", "requested"), event.getAuthor().getAsTag(), true);
+                embed.addField(messages.getFieldName("history", "limit"), String.valueOf(limit), true);
+
+                String footer = messages.getFooter("history");
+                if (footer != null && !footer.isEmpty()) {
+                    embed.setFooter(footer);
+                }
+
                 embed.setTimestamp(java.time.Instant.now());
-                embed.setFooter("Usa il comando con cautela - Informazioni sensibili");
 
                 event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
                 // Log anche questo comando
-                logCommand(event, "HISTSTAFF", targetUserId, null, null, "Cronologia richiesta per " + targetUserId);
+                Map<String, String> logPlaceholders = messages.createPlaceholders("user_id", targetUserId);
+                logCommand(event, "HISTSTAFF", targetUserId, null, null, messages.getLogMessage("history-requested", logPlaceholders));
 
             } catch (Exception e) {
                 plugin.getLogger().warning("Errore nel recupero della cronologia: " + e.getMessage());
-                event.getChannel().sendMessage("❌ Errore nel recupero della cronologia comandi!").queue();
+                event.getChannel().sendMessage(messages.getLogMessage("error-history")).queue();
             }
         });
     }
@@ -418,30 +478,34 @@ public class DiscordBot extends ListenerAdapter {
         String userId = event.getAuthor().getId();
 
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(Color.BLUE);
-        embed.setTitle("📋 Comandi Disponibili");
-        embed.setDescription("Ecco tutti i comandi che puoi utilizzare:");
+        embed.setColor(messages.getColor("help"));
+        embed.setTitle(messages.getEmbedTitle("help"));
+        embed.setDescription(messages.getMessage("help.description"));
 
-        embed.addField(prefix + "players", "Mostra la lista dei player online", false);
-        embed.addField(prefix + "ban <player> [durata] [motivo]", "Banna un player dal server", false);
-        embed.addField(prefix + "unban <player>", "Sbanna un player dal server", false);
-        embed.addField(prefix + "kick <player> [motivo]", "Kicka un player dal server", false);
-        embed.addField(prefix + "mute <player> [durata] [motivo]", "Muta un player nel server", false);
-        embed.addField(prefix + "unmute <player>", "Smuta un player nel server", false);
-        embed.addField(prefix + "ip <player>", "Mostra l'IP del player (solo se online)", false);
+        embed.addField(prefix + "players", messages.getHelpCommandDescription("players"), false);
+        embed.addField(prefix + "ban <player> [durata] [motivo]", messages.getHelpCommandDescription("ban"), false);
+        embed.addField(prefix + "unban <player>", messages.getHelpCommandDescription("unban"), false);
+        embed.addField(prefix + "kick <player> [motivo]", messages.getHelpCommandDescription("kick"), false);
+        embed.addField(prefix + "mute <player> [durata] [motivo]", messages.getHelpCommandDescription("mute"), false);
+        embed.addField(prefix + "unmute <player>", messages.getHelpCommandDescription("unmute"), false);
+        embed.addField(prefix + "ip <player>", messages.getHelpCommandDescription("ip"), false);
 
         // Mostra il comando histstaff solo agli utenti autorizzati
         if (config.hasHistoryPermission(userId)) {
-            embed.addField(prefix + "histstaff <discord_user_id>", "Mostra la cronologia comandi di uno staff", false);
+            embed.addField(prefix + "histstaff <discord_user_id>", messages.getHelpCommandDescription("histstaff"), false);
         }
 
-        embed.addField(prefix + "help", "Mostra questo messaggio di aiuto", false);
+        embed.addField(prefix + "help", messages.getHelpCommandDescription("help"), false);
 
-        embed.setFooter("Esempi durata: 1h, 30m, 1d, permanent");
+        String footer = messages.getFooter("help");
+        if (footer != null && !footer.isEmpty()) {
+            embed.setFooter(footer);
+        }
+
         embed.setTimestamp(java.time.Instant.now());
 
         event.getChannel().sendMessageEmbeds(embed.build()).queue();
-        logCommand(event, "HELP", null, null, null, "Menu di aiuto visualizzato");
+        logCommand(event, "HELP", null, null, null, messages.getLogMessage("help-displayed"));
     }
 
     private void logCommand(MessageReceivedEvent event, String commandType, String targetPlayer,
