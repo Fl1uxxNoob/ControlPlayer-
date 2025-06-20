@@ -1,5 +1,8 @@
 # ControlPlayers
 
+![version](https://img.shields.io/badge/version-1.0-blue.svg)
+![MC version](https://img.shields.io/badge/MC-1.8.8-brightgreen.svg)
+
 A powerful Minecraft 1.8.8 Spigot plugin that allows server administrators to manage players directly from Discord using bot commands. Control your server moderation, view player information, and track staff activity - all from your Discord server.
 
 ## 🌟 Features
